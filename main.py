@@ -8,21 +8,20 @@ import cv2
 
 raw_image = cv2.imread('/home/farooq/kamil/Qasim_Whitefly/13.1.1.png')
 #cropped_raw_image = cv2.imread('/home/farooq/kamil/Qasim_Whitefly/cropped_13.1.1.png')
-
 #raw_image = cv2.imread('/home/farooq/kamil/Qasim_Whitefly/51.1.1_slightcrop.png')
-
 #raw_image = cv2.imread('/home/farooq/kamil/Qasim_Whitefly/56.3.1_slightcrop.png')
-
 #raw_image = cv2.imread('/home/farooq/kamil/Qasim_Whitefly/57.3.1_slightcrop.png')
 
 rgb_image = cv2.cvtColor(raw_image, cv2.COLOR_BGR2RGB)
 
-cv2.imshow('raw', raw_image)
-cv2.waitKey(0)
+
+## Uncomment following code if running parts of the file instead of running in one go
+#cv2.imshow('raw', raw_image)
+#cv2.waitKey(0)
 
 
-cv2.imshow('rgb', rgb_image)
-cv2.waitKey(0)
+#cv2.imshow('rgb', rgb_image)
+#cv2.waitKey(0)
 
 #cv2.destroyAllWindows()
 
@@ -31,10 +30,12 @@ cv2.waitKey(0)
 hsv_image = cv2.cvtColor(rgb_image, cv2.COLOR_RGB2HSV)
 h, s, v = cv2.split(hsv_image)
 
-cv2.imshow('hue', h) 
-cv2.waitKey(0)
+## Uncomment following code if running parts of the file instead of running in one go
+#cv2.imshow('hue', h) 
+#cv2.waitKey(0)
 
 
+### Trying other color spaces for optimum object (Whitefly eggs) detection ####
 #ycc_image = cv2.cvtColor(rgb_image, cv2.COLOR_RGB2YCrCb)
 #y, cr, cb = cv2.split(ycc_image)
 
@@ -60,27 +61,8 @@ for beta in range(25,26): #25-13.1
         cv2.imshow(name, new_image)
         cv2.waitKey(0)
 
-######### TRYING
-new_image = np.zeros(cb.shape, cb.dtype)
-for beta in range(1,2): #25
-    for alpha in range(2,3): #4
-        for y in range(cb.shape[0]):
-            for x in range(cb.shape[1]):
-                #for c in range(h.shape[2]):
-                new_image[y,x] = np.clip(alpha*cb[y,x] + beta, 0, 255)
-        name = 'CB_New_Image_alpha'+str(alpha)+'_beta_'+str(beta)
-        cv2.imshow(name, new_image)
-        cv2.waitKey(0)
-
-##################
-
-
-cv2.imshow(name, new_image)
-cv2.waitKey(0)
-
-
-thresh_binary = 190#138
-ret, binary = cv2.threshold(new_image, thresh_binary, 255, cv2.THRESH_BINARY) #190-13.1, 160-56.3.1
+thresh_binary = 190  #Optimum thresholding value for image 13.1 =  190, image 56.3.1 = 160
+ret, binary = cv2.threshold(new_image, thresh_binary, 255, cv2.THRESH_BINARY) 
 cv2.imshow('binary_' + str(thresh_binary), binary)
 cv2.waitKey(0)
 
@@ -90,8 +72,10 @@ cv2.waitKey(0)
 with_contour_image = raw_image.copy()
 #newest_image = raw_image.copy()
 inverted_binary = ~binary
-cv2.imshow('Inverted binary image', inverted_binary)
-cv2.waitKey(0) # Wait for keypress to continue
+
+## Uncomment following code if running parts of the file instead of running in one go
+#cv2.imshow('Inverted binary image', inverted_binary)
+#cv2.waitKey(0) # Wait for keypress to continue
 
 
 # Find the contours on the inverted binary image, and store them in a list
@@ -105,21 +89,15 @@ contours, hierarchy = cv2.findContours(inverted_binary,
 # Input color code is in BGR (blue, green, red) format
 # -1 means to draw all contours
 with_contours = cv2.drawContours(with_contour_image, contours, -1,(255,0,255),3)
-cv2.imshow('Detected contours_' + str(thresh_binary), with_contours)
-cv2.waitKey(0)
 
-#cv2.imshow('CB_D' + str(thresh_binary)etected contours', with_contours)
+## Uncomment following code if running parts of the file instead of running in one go
+#cv2.imshow('Detected contours_' + str(thresh_binary), with_contours)
 #cv2.waitKey(0)
-
 
 cv2.destroyAllWindows()
  
 # Show the total number of contours that were detected
 print('Total number of contours detected: ' + str(len(contours)))
-
-
-cv2.destroyAllWindows()
-
 
 ################ SAVING ##############
 
